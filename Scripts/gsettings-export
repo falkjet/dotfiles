@@ -1,0 +1,12 @@
+#!/bin/bash
+
+exportsettings() {
+    comm -23 <(gsettings list-recursively | sort) <(XDG_CONFIG_HOME=/tmp/ gsettings list-recursively | sort)
+}
+
+if [ -z $1 ]
+then
+    exportsettings
+else
+    exportsettings > $1
+fi

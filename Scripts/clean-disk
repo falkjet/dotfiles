@@ -1,0 +1,5 @@
+#!/bin/sh
+
+rm -rf ~/.cache/yay
+sudo paccache -ruk 0; sudo paccache -rk 1
+rm -rf ~/programming/rust/*/target

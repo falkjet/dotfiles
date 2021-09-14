@@ -1,0 +1,5 @@
+#!/bin/bash
+
+for schema in $(gsettings list-schemas)
+    do gsettings reset-recursively $schema
+done

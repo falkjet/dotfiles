@@ -1,0 +1,33 @@
+#!/bin/bash
+
+yarn add -D typescript ts-node ts-node-dev @types/node
+cat package.json | jq '.+{
+    scripts: (.scripts+{
+        "dev": "ts-node-dev src/index.ts",
+        "build": "tsc",
+        "build:watch": "tsc -w",
+        "start": "node dist/index.js",
+        "start:dev": "ts-node src/index.ts",
+        "clean": "rm -rf dist"
+    }),
+    main: "dist/index.js",
+    typings: "dist/index.d.ts"
+}' > package.json.modified
+mv package.json.modified package.json
+
+echo '{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "rootDir": "src",
+    "outDir": "dist",
+    "strict": true,
+    "skipLibCheck": true,
+    "declaration": true
+  }
+}' > tsconfig.json
+
+mkdir -p src
+touch src/index.ts

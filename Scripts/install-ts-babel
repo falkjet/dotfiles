@@ -1,0 +1,42 @@
+#!/bin/bash
+
+echo 'module.exports = {
+    presets: [
+        "@babel/preset-typescript",
+        "@babel/preset-env"
+    ],
+    "plugins": [
+        ["@babel/transform-runtime"]
+    ]
+}' > babel.config.js
+
+echo '{
+  "compilerOptions": {
+    /* Visit https://aka.ms/tsconfig.json to read more about this file */
+    "target": "es5",
+    "module": "commonjs",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true // important
+  }
+}' > tsconfig.json
+
+cat package.json | jq '. + {
+  "scripts": {
+    "watch": "npm run build -- --watch",
+    "build": "babel src --out-dir dist --extensions .ts,.js",
+    "dev": "npm run watch & nodemon dist/index.js",
+    "start": "node dist/index.js"
+  }
+}' > package.json.new
+
+mv package.json.new package.json
+
+
+yarn add -D @babel/{core,cli,preset-env,plugin-transform-runtime,preset-typescript} @types/node typescript nodemon 
+yarn add @babel/runtime
+
+mkdir src
+echo 'console.log("Hello, World!")' > src/index.ts

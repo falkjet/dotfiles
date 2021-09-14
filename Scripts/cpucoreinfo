@@ -1,0 +1,3 @@
+#!/bin/bash
+
+grep -v 'power\ management\|flags\|vendor_id\|cpu family\|physical id\|alignment\|bugs\|siblings\|fpu\|cpuid\|cache size\|wp\|model\|stepping\|microcode\|address sizes\|clflush\|bogomips' /proc/cpuinfo

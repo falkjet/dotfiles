@@ -1,0 +1,10 @@
+#!/bin/bash
+
+packages=""
+
+for package in $(pacman -Qme | fzf -m | awk '{print $1}')
+do
+    packages="$packages $package"
+done
+
+sudo pacman -Rscn $packages

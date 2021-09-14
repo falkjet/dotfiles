@@ -1,0 +1,22 @@
+#!/bin/bash
+sessions="$(tmux list-sessions 2>/dev/null  | grep -vE '^\s*$' | grep -v attached)"
+
+lines=$(echo "$sessions" | wc -l)
+
+if [[ -z "$sessions" ]]
+then
+    echo no tmux sessions
+    exit 0
+fi
+
+if [[ $lines = 1 ]]
+then
+    echo one tmux session
+    echo "$sessions"
+    session=$(echo $sessions | cut -d: -f1)
+else
+    echo multiple tmux sessions
+    session=$(echo "${sessions[@]}" | fzf | cut -d: -f1)
+fi
+
+tmux attach-session -t $session

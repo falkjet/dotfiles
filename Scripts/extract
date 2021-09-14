@@ -1,0 +1,65 @@
+#!/bin/bash
+file="$1"
+outdir="$2"
+tmpdir="$(mktemp -d)"
+
+if [ -z "$outdir" ]
+then
+    dir="$(dirname "$file")"
+    basename="$(basename "$file" | cut -d. -f1)"
+    outdir="$dir/$basename"
+fi
+if [ -f "$outdir" ]
+then
+    echo directory "$outdir" alredy exists
+    exit 1
+fi
+if ! mkdir "$outdir"
+then
+    echo could not create output directory
+    exit 1
+fi
+
+echo "$file"
+case "$file" in
+    *.zip)
+        if ! unzip "$file" -d "$tmpdir" >/dev/null
+        then
+            echo failed to extract archive
+            rmdir "$outdir"
+            rm -rf "$tmpdir"
+            exit 1
+        fi;;
+    *.tar|*.tar.*)
+        if ! tar -xaf "$file" -C "$tmpdir" >/dev/null
+        then
+            echo failed to extract archive
+            rmdir "$outdir"
+            rm -rf "$tmpdir"
+            exit 1
+        fi;;
+    *)
+        echo is not a recognised archive
+        rmdir "$outdir"
+        rm -rf "$tmpdir"
+        exit 1;;
+esac
+
+numfiles=$(ls -A "$tmpdir" | wc -l)
+if [ $numfiles -gt 1 ]
+then
+    dir="$tmpdir"
+elif [ $numfiles = 1 ]
+then
+    dir="$tmpdir/$(ls -A "$tmpdir")"
+else
+    echo archive is empty
+    exit 0
+fi
+
+while read file
+do
+    mv "$dir/$file" "$outdir"
+done < <(ls -A "$dir/" )
+
+rm -rf "$tmpdir"
