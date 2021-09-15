@@ -16,12 +16,14 @@ bindkey "^[[1;3C" forward-word
 bindkey "^[[1;5C" forward-word
 WORDCHARS=''
 
-### Powerlevel10k ###
-USE_POWERLINE="true"
+### Prompt ###
 if [[ -e /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme ]]; then
+  USE_POWERLINE="true"
   source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
+  [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+elif command -v starship > /dev/null; then
+  source <(/usr/bin/starship init zsh --print-full-init)
 fi
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 
 ### autocompletion ###
 autoload compinit
