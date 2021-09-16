@@ -48,7 +48,7 @@ export LF_ICONS="di=:fi=:ln=:or=:ex=:\
 "
 
 ### nvm ###
-export NVM_DIR="$HOME/.nvm"
+export NVM_DIR="$HOME/.local/share/nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
 ### Path ###
