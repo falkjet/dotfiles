@@ -50,10 +50,28 @@ cmd mkscript %{{
     echo "#!/bin/sh" >> "$fn"
     chmod +x "$fn"
 }}
+
+cmd mktexproject %{{
+    echo -n "Enter project name: "
+    read pn
+    mkdir "$pn"
+    fn="$pn/$(basename "$pn").tex"
+    name="$(getent passwd "$(whoami)" | cut -d: -f5)"
+    echo '\documentclass{article}' > "$fn"
+    echo '' >> "$fn"
+    echo "\\title{$(basename "$pn")}" >> "$fn"
+    echo "\\author{$name}" >> "$fn"
+    echo '\date{\today}' >> "$fn"
+    echo '' >> "$fn"
+    echo '\begin{document}' >> "$fn"
+    echo '    \maketitle' >> "$fn"
+    echo '\end{document}' >> "$fn"
+}}
 map m
 map md mkdir
 map mf touch
 map ms mkscript
+map ml mktexproject
 map . set hidden!
 
 ########################
