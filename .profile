@@ -51,8 +51,11 @@ export LF_ICONS="di=:fi=:ln=:or=:ex=:\
 export NVM_DIR="$HOME/.local/share/nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
+### Cargo ###
+export CARGO_HOME="$HOME/.local/share/cargo"
+
 ### Path ###
-export PATH="$HOME/.cargo/bin:$HOME/Scripts:$HOME/.local/bin:$PATH"
+export PATH="$CARGO_HOME/bin:$HOME/Scripts:$HOME/.local/bin:$PATH"
 
 ### Pass ###
 export PASSWORD_STORE_DIR=$HOME/.local/share/password-storage
