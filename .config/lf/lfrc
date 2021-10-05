@@ -93,9 +93,8 @@ map X !$f
 ################
 ### Archives ###
 ################
-cmd extract %extract $f
+cmd extract $aunpack $f
 cmd tar %tar -caf "$(basename "$f")".tar.gz "$(basename "$f")"
-cmd extract $extract "$f"
 
 map a
 map at tar
