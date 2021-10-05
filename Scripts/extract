@@ -14,7 +14,7 @@ then
     echo directory "$outdir" alredy exists
     exit 1
 fi
-if ! mkdir "$outdir"
+if ! mkdir "$outdir" &>/dev/null
 then
     echo could not create output directory
     exit 1
