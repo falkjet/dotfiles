@@ -17,6 +17,7 @@ alias cdclip='cd $(xclip -selection c -o)'
 alias prisma='npx prisma'
 alias irssi='irssi --home ~/.config/irssi/ --config ~/.config/irssi/config'
 alias config='git --git-dir="$HOME"/dotfiles --work-tree="$HOME"'
+alias md='glow -p -w $COLUMNS'
 
 ### neovim ###
 export EDITOR=nvim
