@@ -60,3 +60,9 @@ export PATH="$CARGO_HOME/bin:$HOME/Scripts:$HOME/.local/bin:$PATH"
 
 ### Pass ###
 export PASSWORD_STORE_DIR=$HOME/.local/share/password-storage
+
+### lf file manager ###
+if [ -e "/usr/share/lf/lfcd.sh" ]; then
+	source "/usr/share/lf/lfcd.sh"
+	alias lf=lfcd
+fi
