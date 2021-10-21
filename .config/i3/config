@@ -7,7 +7,9 @@ gaps inner 20
 ### autostart ###
 exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock-fancy-rapid --nofork
 exec --no-startup-id nm-applet
-exec feh --bg-fill ~/.config/i3/wallpaper
+exec --no-startup-id feh --bg-fill ~/.config/i3/wallpaper
+exec_always --no-startup-id xrdb ~/.Xresources
+exec --no-startup-id xcompmgr
 
 ### Window specific configuration ###
 for_window [class="^.*"] border pixel 2
