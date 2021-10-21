@@ -26,7 +26,7 @@ bindsym XF86AudioMicMute exec pactl set-source-mute @DEFAULT_SOURCE@ toggle
 floating_modifier $mod
 
 ### Launch ###
-bindsym $mod+Return exec ~/.config/sway/terminal
+bindsym $mod+Return exec ~/.config/i3/terminal
 bindsym $mod+b exec brave
 bindsym $mod+Shift+x exec xkill
 bindsym $mod+c exec rofi -modi "clipboard:greenclip print" -show clipboard -run-command '{cmd}'
@@ -40,7 +40,7 @@ bindsym $mod+q kill
 bindsym Mod1+f4 kill
 
 ### Lock screen ###
-bindsym ctrl+$mod+l exec locksway
+bindsym ctrl+$mod+l exec locki3
 
 ### Switch window ###
 bindsym Mod1+Tab focus next
