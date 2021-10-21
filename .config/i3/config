@@ -1,9 +1,9 @@
 set $mod Mod4
-set $refresh_i3status killall -SIGUSR1 i3status
 
 ### autostart ###
 exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock-fancy-rapid --nofork
 exec --no-startup-id nm-applet
+exec feh --bg-fill ~/.config/i3/wallpaper
 
 ### Window specific configuration ###
 for_window [class="^.*"] border pixel 2
@@ -11,6 +11,10 @@ for_window [class="OpenGL"] floating enable
 
 ### Font ###
 font pango:monospace 8
+
+### Brightness ###
+bindsym XF86MonBrightnessUp exec brightnessctl s 500+
+bindsym XF86MonBrightnessDown exec brightnessctl s 500-
 
 ### Volume control ###
 bindsym XF86AudioRaiseVolume exec pactl set-sink-volume @DEFAULT_SINK@ +10%
