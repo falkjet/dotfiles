@@ -1,5 +1,9 @@
 set $mod Mod4
 
+### Gaps ###
+smart_gaps on
+gaps inner 20
+
 ### autostart ###
 exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock-fancy-rapid --nofork
 exec --no-startup-id nm-applet
