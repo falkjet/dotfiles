@@ -33,7 +33,7 @@ floating_modifier $mod
 
 ### Launch ###
 bindsym $mod+Return exec ~/.config/i3/terminal
-bindsym $mod+b exec brave
+bindsym $mod+b exec webbrowser
 bindsym $mod+Shift+x exec xkill
 bindsym $mod+c exec rofi -modi "clipboard:greenclip print" -show clipboard -run-command '{cmd}'
 bindsym $mod+d exec rofi -show run
