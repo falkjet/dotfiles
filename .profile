@@ -66,3 +66,8 @@ if [ -e "/usr/share/lf/lfcd.sh" ]; then
 	source "/usr/share/lf/lfcd.sh"
 	alias lf=lfcd
 fi
+
+### linuxbrew ###
+if [ -e "/home/linuxbrew/" ]; then
+    export PATH="$PATH:/home/linuxbrew/.linuxbrew/bin"
+fi
