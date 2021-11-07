@@ -1,0 +1,8 @@
+gen_xinitrc() {
+    echo xrdb ~/.Xresources
+    echo "$(which awesome)" '> ~/.cache/awesome.log 2>&1'
+}
+
+export QT_QPA_PLATFORMTHEME=qt5ct
+
+startx <(gen_xinitrc)
