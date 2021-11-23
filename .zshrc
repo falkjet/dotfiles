@@ -22,7 +22,7 @@ if [[ -e /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme ]]; then
   source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
   [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 elif command -v starship > /dev/null; then
-  source <(/usr/bin/starship init zsh --print-full-init)
+  source <(starship init zsh --print-full-init)
 fi
 
 ### autocompletion ###
