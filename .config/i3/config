@@ -14,7 +14,7 @@ exec --no-startup-id redshift
 exec --no-startup-id i3-battery-popup
 
 ### Window specific configuration ###
-for_window [class="^.*"] border pixel 0
+for_window [class="^.*"] border none
 for_window [class="OpenGL"] floating enable
 
 ### Font ###
