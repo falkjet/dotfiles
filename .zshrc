@@ -7,6 +7,12 @@ fi
 ### source .profile
 [[ -e ~/.profile ]] && emulate sh -c 'source ~/.profile'
 
+### history
+HISTFILE=~/.zsh_history
+HISTSIZE=1000
+SAVEHIST=1000
+setopt appendhistory
+
 ### input ###
 bindkey -e
 bindkey "\e[3~" delete-char
