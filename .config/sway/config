@@ -11,9 +11,11 @@ exec greenclip daemon
 exec i3-battery-popup -t 1m
 exec mako
 exec xrdb ~/.Xresources
+exec sway_inactive_opacity
 
 ### Window specific configuration ###
-for_window [class="^.*"] border pixel 2
+for_window [class="^.*"] border none
+for_window [title="^.*"] border none
 for_window [class="OpenGL"] floating enable
 
 ### Font ###
