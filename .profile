@@ -71,3 +71,6 @@ fi
 if [ -e "/home/linuxbrew/" ]; then
     export PATH="$PATH:/home/linuxbrew/.linuxbrew/bin"
 fi
+
+### ipython ###
+export IPYTHONDIR="~/.config/ipython"
