@@ -12,6 +12,8 @@ exec i3-battery-popup -t 1m
 exec mako
 exec xrdb ~/.Xresources
 exec sway_inactive_opacity
+exec systemctl --user import-environment DISPLAY WAYLAND_DISPLAY SWAYSOCK
+exec hash dbus-update-activation-environment 2>/dev/null && dbus-update-activation-environment --systemd DISPLAY WAYLAND_DISPLAY SWAYSOCK
 
 ### Window specific configuration ###
 for_window [class="^.*"] border none
