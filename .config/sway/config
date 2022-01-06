@@ -2,7 +2,7 @@ set $mod Mod4
 
 ### Gaps ###
 smart_gaps on
-gaps inner 20
+gaps inner 0
 
 ### Background processes ###
 exec swayidle -w timeout 300 'locksway'
