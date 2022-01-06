@@ -24,7 +24,7 @@ font pango:monospace 8
 ### Input ###
 input * xkb_layout no
 input * scroll_button disable
-input type:touchpad natural_scroll enable
+input type:touchpad natural_scroll disable
 input type:pointer accel_profile flat
 input * dwt disable
 
