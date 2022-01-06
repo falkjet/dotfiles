@@ -42,6 +42,7 @@ bindsym $mod+d exec rofi -show run
 bindsym $mod+space exec rofi -modi drun -show drun
 bindsym $mod+m exec rofimoji
 bindsym $mod+p exec rofi-pass
+bindsym $mod+F7 exec --no-startup-id autorandr --change
 
 ### Kill focused window ###
 bindsym $mod+q kill
