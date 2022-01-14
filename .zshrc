@@ -31,6 +31,11 @@ elif command -v starship > /dev/null; then
   source <(/usr/bin/starship init zsh --print-full-init)
 fi
 
+### Zoxide ###
+if command -v zoxide > /dev/null; then
+    eval "$(zoxide init zsh --cmd c)"
+fi
+
 ### autocompletion ###
 autoload compinit
 compinit -y
