@@ -20,9 +20,12 @@ def add_keybind(name, displayname, keybind, command):
 def del_keybind(name):
     media_keys = GSettings.new("org.gnome.settings-daemon.plugins.media-keys")
     keybind_paths = set(media_keys.get_value("custom-keybindings").unpack())
-    keybind_paths.remove(f"/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/{name}/")
+    keybind_paths.discard(f"/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/{name}/")
     media_keys.set_value("custom-keybindings", GVariant("as", list(keybind_paths)))
 
+    keybind_settings = GSettings.new_with_path(f"org.gnome.settings-daemon.plugins.media-keys.custom-keybinding", f"/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/{name}/")
+    for key in keybind_settings.props.settings_schema.list_keys():
+        keybind_settings.reset(key)
 
 def list_keybinds():
     media_keys = GSettings.new("org.gnome.settings-daemon.plugins.media-keys")
