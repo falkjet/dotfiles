@@ -1,5 +1,18 @@
-#!/bin/sh
+#!/bin/bash
 cd || exit
+
+#######################
+## Download Dotfiles ##
+#######################
+if [ ! -d "$HOME/dotfiles" ]
+then
+    git clone "https://github.com/falkjet/dotfiles" --bare "$HOME/dotfiles"
+    git --git-dir="$HOME/dotfiles" --work-tree="$HOME" config status.showUntrackedFiles no
+    git --git-dir="$HOME/dotfiles" --work-tree="$HOME" sparse-checkout set '/*' '!*.md'
+    git --git-dir="$HOME/dotfiles" --work-tree="$HOME" checkout -f
+    source .profile
+    exec Scripts/setup.sh
+fi
 
 ##########################
 ## Package Installation ##
@@ -13,7 +26,19 @@ fi
 os=$(. /etc/os-release; echo "$ID")
 case "$os" in
     fedora)
-        sudo dnf install starship starship bat papirus-icon-theme gnome-tweaks gnome-extensions-app fzf;;
+        packages=(
+            starship
+            git-delta
+            bat
+            papirus-icon-theme
+            gnome-tweaks
+            gnome-extensions-app
+            fzf
+        )
+        if [ "$XDG_CURRENT_DESKTOP" = GNOME ]; then
+            packages+=(gnome-extensions-app gnome-tweaks)
+        fi
+        sudo dnf install ${packages[@]};;
     *)
         echo This distro is not supported
         exit 1;;
@@ -26,14 +51,6 @@ packer_dir="${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/pack/packer/start/pa
 if [ ! -d "$packer_dir" ];
 then
 	git clone --depth 1 https://github.com/wbthomason/packer.nvim "$packer_dir"
-fi
-
-if [ ! -d "$HOME/dotfiles" ]
-then
-    git clone "https://github.com/falkjet/dotfiles" --bare "$HOME/dotfiles"
-    git --git-dir="$HOME/dotfiles" --work-tree="$HOME" config status.showUntrackedFiles no
-    git --git-dir="$HOME/dotfiles" --work-tree="$HOME" sparse-checkout set '/*' '!*.md'
-    git --git-dir="$HOME/dotfiles" --work-tree="$HOME" checkout -f
 fi
 
 font=JetBrainsMono
@@ -60,3 +77,25 @@ case "$XDG_CURRENT_DESKTOP" in
         gsettings set org.gnome.desktop.wm.keybindings switch-applications-backward "['<Shift><Super>Tab']"
         gsettings set org.gnome.desktop.wm.preferences resize-with-right-button true;;
 esac
+
+#########
+## Git ##
+#########
+git config --global core.pager delta
+git config --global interactive.diffFilter delta --color-only
+git config --global delta.navigate true
+git config --global delta.light false
+git config --global merge.conflictstyle diff3
+git config --global diff.colorMoved default
+
+if [ -z "$(git config --global --get user.email)" ]; then
+    echo -n "whats your email (git)? "
+    read email;
+    git config --global user.email "$email";
+fi
+
+if [ -z "$(git config --global --get user.name)" ]; then
+    echo -n "whats your name (git)? "
+    read name;
+    git config --global user.name "$name";
+fi
