@@ -67,6 +67,15 @@ then
     rm -rf "$tmp"
 fi
 
+if [ ! -f "$NVM_DIR" ]
+then
+    mkdir -p "$NVM_DIR"
+    PROFILE=/dev/null bash -c "$(curl https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh)"
+    source "$NVM_DIR"/nvm.sh
+    nvm install --lts
+    nvm use --lts
+fi
+
 
 ########################
 ## Desktop environmet ##
