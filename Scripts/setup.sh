@@ -53,6 +53,9 @@ packer_dir="${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/pack/packer/start/pa
 if [ ! -d "$packer_dir" ];
 then
 	git clone --depth 1 https://github.com/wbthomason/packer.nvim "$packer_dir"
+    nvim --headless -u <(echo 'lua require("plugins")
+autocmd User PackerComplete quitall
+PackerInstall')
 fi
 
 font=JetBrainsMono
