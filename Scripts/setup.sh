@@ -31,14 +31,16 @@ case "$os" in
             git-delta
             bat
             papirus-icon-theme
-            gnome-tweaks
-            gnome-extensions-app
             fzf
         )
         if [ "$XDG_CURRENT_DESKTOP" = GNOME ]; then
             packages+=(gnome-extensions-app gnome-tweaks)
         fi
-        sudo dnf install ${packages[@]};;
+        packages=($(comm -23 <(for package in "${packages[@]}"; do echo "$package"; done | sort -u) <(dnf list installed | cut -d. -f1 | sort)))
+        if [ ${#packages[@]} != 0 ]; then
+            echo Installing "${packages[@]}"
+            sudo dnf install ${packages[@]}
+        fi;;
     *)
         echo This distro is not supported
         exit 1;;
