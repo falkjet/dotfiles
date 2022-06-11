@@ -71,6 +71,8 @@ fi
 ########################
 case "$XDG_CURRENT_DESKTOP" in
     GNOME)
+        gkeybind add browser Browser '<Super>b' firefox
+        gkeybind add terminal "GNOME Terminal" '<Super>Return' gnome-terminal
         gsettings set org.gnome.desktop.wm.keybindings switch-windows "['<Alt>Tab']"
         gsettings set org.gnome.desktop.wm.keybindings switch-windows-backward  "['<Shift><Alt>Tab']"
         gsettings set org.gnome.desktop.wm.keybindings switch-applications "['<Super>Tab']"
