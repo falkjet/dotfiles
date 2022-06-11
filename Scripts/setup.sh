@@ -11,7 +11,7 @@ then
     git --git-dir="$HOME/dotfiles" --work-tree="$HOME" sparse-checkout set '/*' '!*.md'
     git --git-dir="$HOME/dotfiles" --work-tree="$HOME" checkout -f
     source .profile
-    exec Scripts/setup.sh
+    exec bash Scripts/setup.sh
 fi
 
 ##########################
