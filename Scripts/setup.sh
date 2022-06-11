@@ -1,11 +1,16 @@
 #!/bin/bash
 cd || exit
 
+function log_stage {
+    echo -e "\e[32m$@\e[0m"
+}
+
 #######################
 ## Download Dotfiles ##
 #######################
 if [ ! -d "$HOME/dotfiles" ]
 then
+    log_stage "Downloading Dotfiles"
     git clone "https://github.com/falkjet/dotfiles" --bare "$HOME/dotfiles"
     git --git-dir="$HOME/dotfiles" --work-tree="$HOME" config status.showUntrackedFiles no
     git --git-dir="$HOME/dotfiles" --work-tree="$HOME" sparse-checkout set '/*' '!*.md'
@@ -38,7 +43,7 @@ case "$os" in
         fi
         packages=($(comm -23 <(for package in "${packages[@]}"; do echo "$package"; done | sort -u) <(dnf list installed | cut -d. -f1 | sort)))
         if [ ${#packages[@]} != 0 ]; then
-            echo Installing "${packages[@]}"
+            log_stage Installing Packages
             sudo dnf install ${packages[@]}
         fi;;
     *)
@@ -52,6 +57,7 @@ esac
 packer_dir="${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/pack/packer/start/packer.nvim
 if [ ! -d "$packer_dir" ];
 then
+    log_stage Installing nvim plugins
 	git clone --depth 1 https://github.com/wbthomason/packer.nvim "$packer_dir"
     nvim --headless -u <(echo 'lua require("plugins")
 autocmd User PackerComplete quitall
@@ -61,6 +67,7 @@ fi
 font=JetBrainsMono
 if [ ! -f "$HOME/.local/share/fonts/JetBrains Mono Regular Nerd Font Complete.ttf" ]
 then
+    log_stage Download Fonts
     tmp="$(mktemp -d)"
     echo "$tmp"
     curl -fLo "$tmp/$font.zip" https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/JetBrainsMono.zip
@@ -72,6 +79,7 @@ fi
 
 if [ ! -d "$NVM_DIR" ]
 then
+    log_stage Installing NVM
     mkdir -p "$NVM_DIR"
     PROFILE=/dev/null bash -c "$(curl https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh)"
     source "$NVM_DIR"/nvm.sh
@@ -85,6 +93,7 @@ fi
 ########################
 case "$XDG_CURRENT_DESKTOP" in
     GNOME)
+        log_stage Configuring Gnome Keybindings
         gkeybind add browser Browser '<Super>b' firefox
         gkeybind add terminal "GNOME Terminal" '<Super>Return' gnome-terminal
         gsettings set org.gnome.desktop.wm.keybindings switch-windows "['<Alt>Tab']"
@@ -97,6 +106,7 @@ esac
 #########
 ## Git ##
 #########
+log_stage Configuring git
 git config --global core.pager delta
 git config --global interactive.diffFilter delta --color-only
 git config --global delta.navigate true
