@@ -70,7 +70,7 @@ then
     rm -rf "$tmp"
 fi
 
-if [ ! -f "$NVM_DIR" ]
+if [ ! -d "$NVM_DIR" ]
 then
     mkdir -p "$NVM_DIR"
     PROFILE=/dev/null bash -c "$(curl https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh)"
