@@ -2,30 +2,57 @@
 import re
 import argparse
 from gi.repository import GLib, Gio
+import subprocess
 
 GVariant = GLib.Variant
 GSettings = Gio.Settings
 
+def run_gsettings(*args):
+    return subprocess.run(["gsettings", *args], stdout=subprocess.PIPE).stdout.decode("utf8")
+
+def parse(t, serialized):
+    variantType = GLib.VariantType.new(t)
+    variant = GVariant.parse(variantType, serialized, None, None)
+    return variant.unpack()
+
+def serialize(t, value):
+    variant = GVariant(t, value)
+    return variant.print_(False)
+
+def gget(t, schema, name):
+    result = run_gsettings("get", schema, name)
+    return parse(t, result)
+
+def gset(t, schema, name, value):
+    serialized = serialize(t, value)
+    run_gsettings("set", schema, name, serialized)
+
+def greset(schema, name=None):
+    if name is None:
+        run_gsettings("reset-recursively", schema)
+    else:
+        run_gsettings("reset", schema, name)
+
 def add_keybind(name, displayname, keybind, command):
-    media_keys = GSettings.new("org.gnome.settings-daemon.plugins.media-keys")
-    keybind_paths = set(media_keys.get_value("custom-keybindings").unpack())
+    keybind_settings_path = f"org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/{name}/"
+    print(gget("s", keybind_settings_path, "name"))
+    gset("s", keybind_settings_path, "name", displayname)
+    gset("s", keybind_settings_path, "command", command)
+    gset("s", keybind_settings_path, "binding", keybind)
+
+    media_keys_path = "org.gnome.settings-daemon.plugins.media-keys"
+    keybind_paths = set(gget("as", media_keys_path, "custom-keybindings"))
     keybind_paths.add(f"/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/{name}/")
-    media_keys.set_value("custom-keybindings", GVariant("as", list(keybind_paths)))
+    gset("as", media_keys_path, "custom-keybindings", list(keybind_paths))
     
-    keybind_settings = GSettings.new_with_path(f"org.gnome.settings-daemon.plugins.media-keys.custom-keybinding", f"/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/{name}/")
-    keybind_settings.set_value("name", GVariant("s", displayname))
-    keybind_settings.set_value("command", GVariant("s", command))
-    keybind_settings.set_value("binding", GVariant("s", keybind))
-
 def del_keybind(name):
-    media_keys = GSettings.new("org.gnome.settings-daemon.plugins.media-keys")
-    keybind_paths = set(media_keys.get_value("custom-keybindings").unpack())
-    keybind_paths.discard(f"/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/{name}/")
-    media_keys.set_value("custom-keybindings", GVariant("as", list(keybind_paths)))
+    keybind_settings_path = f"org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/{name}/"
+    greset(keybind_settings_path)
 
-    keybind_settings = GSettings.new_with_path(f"org.gnome.settings-daemon.plugins.media-keys.custom-keybinding", f"/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/{name}/")
-    for key in keybind_settings.props.settings_schema.list_keys():
-        keybind_settings.reset(key)
+    media_keys_path = "org.gnome.settings-daemon.plugins.media-keys"
+    keybind_paths = set(gget("as", media_keys_path, "custom-keybindings"))
+    keybind_paths.discard(f"/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/{name}/")
+    gset("as", media_keys_path, "custom-keybindings", list(keybind_paths))
 
 def list_keybinds():
     media_keys = GSettings.new("org.gnome.settings-daemon.plugins.media-keys")
