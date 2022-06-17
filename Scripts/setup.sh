@@ -32,14 +32,16 @@ os=$(. /etc/os-release; echo "$ID")
 case "$os" in
     fedora)
         packages=(
-            starship
+            git
             git-delta
+            starship
             bat
-            papirus-icon-theme
             fzf
+            neovim
+            unzip
         )
         if [ "$XDG_CURRENT_DESKTOP" = GNOME ]; then
-            packages+=(gnome-extensions-app gnome-tweaks)
+            packages+=(gnome-extensions-app gnome-tweaks papirus-icon-theme)
         fi
         packages=($(comm -23 <(for package in "${packages[@]}"; do echo "$package"; done | sort -u) <(dnf list installed | cut -d. -f1 | sort)))
         if [ ${#packages[@]} != 0 ]; then
