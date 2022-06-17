@@ -10,6 +10,8 @@ vim.opt.formatoptions:remove({'t'})
 vim.o.expandtab = true
 vim.o.updatetime = 300
 vim.o.signcolumn = 'number'
+vim.o.timeoutlen = 300
+
 
 require("plugins")
 
@@ -66,6 +68,14 @@ vim.keymap.set('i', '<Tab>', function()
     end
 end, { expr = true, noremap = true })
 
+vim.keymap.set('i', '<s-Tab>', function()
+    if pumvisible() then
+        return '<c-p>'
+    else
+        return vim.fn['coc#refresh']()
+    end
+end, { expr = true, noremap = true })
+
 local augroup = vim.api.nvim_create_augroup('init', { clear = true })
 
 vim.api.nvim_create_autocmd('TermOpen', {
@@ -81,7 +91,4 @@ vim.api.nvim_create_autocmd('TermOpen', {
 vim.keymap.set(
     'n', '<c-t>', '<Cmd>NERDTreeToggle<CR>', { noremap = true })
 vim.keymap.set(
-    {'i', 'n'}, '<c-space>', '<Cmd>CtrlPBuffer<CR>', { noremap = true })
-
-require('gitsigns').setup()
-require('toggleterm').setup()
+    {'i', 'n'}, '<c-space>', '<Cmd>Telescope buffers<CR>', { noremap = true })
