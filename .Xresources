@@ -34,3 +34,9 @@ XTerm*vt100.translations: #override \
 *.color14:    #9AEDFE
 *.color7:     #BFBFBF
 *.color15:    #E6E6E6
+
+!URxvt
+URxvt*scrollBar: false
+URxvt*font: xft:JetBrainsMono Nerd Font
+URxvt*depth: 32
+URxvt*background: rgba:0000/0000/0000/c800
