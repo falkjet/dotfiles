@@ -67,7 +67,7 @@ PackerInstall')
 fi
 
 font=JetBrainsMono
-if [ ! -f "$HOME/.local/share/fonts/JetBrains Mono Regular Nerd Font Complete.ttf" ]
+if [ -n ${XDG_CURRENT_DESKTOP:+x} ] && [ ! -f "$HOME/.local/share/fonts/JetBrains Mono Regular Nerd Font Complete.ttf" ]
 then
     log_stage Download Fonts
     tmp="$(mktemp -d)"
