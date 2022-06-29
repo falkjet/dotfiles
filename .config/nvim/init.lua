@@ -31,6 +31,7 @@ function toggleterminal(termnumber)
         n = tonumber(name:match('^.*#toggleterm#(%d+)$'))
         if n == termnumber or termnumber == 0 then
             vim.api.nvim_set_current_win(v)
+            vim.cmd [[ startinsert ]]
             return
         end
     end
