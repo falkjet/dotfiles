@@ -76,6 +76,19 @@ vim.keymap.set('i', '<s-Tab>', function()
     end
 end, { expr = true, noremap = true })
 
+vim.cmd [[
+inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
+                                         \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+]]
+
+-- vim.keymap.set('i', '<cr>', function()
+--     if pumvisible() then
+--         return vim.fn['coc#_select_confirm']()
+--     else
+--         return '<cr>'
+--     end
+-- end, { expr = true, noremap=true})
+
 local augroup = vim.api.nvim_create_augroup('init', { clear = true })
 
 vim.api.nvim_create_autocmd('TermOpen', {
@@ -91,4 +104,4 @@ vim.api.nvim_create_autocmd('TermOpen', {
 vim.keymap.set(
     'n', '<c-t>', '<Cmd>NERDTreeToggle<CR>', { noremap = true })
 vim.keymap.set(
-    {'i', 'n'}, '<c-space>', '<Cmd>Telescope buffers<CR>', { noremap = true })
+    {'i', 'n'}, '<c-space>', vim.fn['coc#refresh'], { noremap = true, expr = true })
