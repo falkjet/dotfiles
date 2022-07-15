@@ -127,3 +127,13 @@ if [ -z "$(git config --global --get user.name)" ]; then
     read name;
     git config --global user.name "$name";
 fi
+
+###############
+## Oh my zsh ##
+###############
+if [[ ! -e $ZSH ]]; then
+    export KEEP_ZSHRC=yes
+    export RUNZSH=no
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+    git clone https://github.com/romkatv/powerlevel10k.git "$ZSH/custom/themes/powerlevel10k"
+fi
