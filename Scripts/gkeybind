@@ -1,0 +1,102 @@
+#!/usr/bin/env python3
+import re
+import argparse
+from gi.repository import GLib, Gio
+import subprocess
+
+GVariant = GLib.Variant
+GSettings = Gio.Settings
+
+def run_gsettings(*args):
+    return subprocess.run(["gsettings", *args], stdout=subprocess.PIPE).stdout.decode("utf8")
+
+def parse(t, serialized):
+    variantType = GLib.VariantType.new(t)
+    variant = GVariant.parse(variantType, serialized, None, None)
+    return variant.unpack()
+
+def serialize(t, value):
+    variant = GVariant(t, value)
+    return variant.print_(False)
+
+def gget(t, schema, name):
+    result = run_gsettings("get", schema, name)
+    return parse(t, result)
+
+def gset(t, schema, name, value):
+    serialized = serialize(t, value)
+    run_gsettings("set", schema, name, serialized)
+
+def greset(schema, name=None):
+    if name is None:
+        run_gsettings("reset-recursively", schema)
+    else:
+        run_gsettings("reset", schema, name)
+
+def add_keybind(name, displayname, keybind, command):
+    keybind_settings_path = f"org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/{name}/"
+    print(gget("s", keybind_settings_path, "name"))
+    gset("s", keybind_settings_path, "name", displayname)
+    gset("s", keybind_settings_path, "command", command)
+    gset("s", keybind_settings_path, "binding", keybind)
+
+    media_keys_path = "org.gnome.settings-daemon.plugins.media-keys"
+    keybind_paths = set(gget("as", media_keys_path, "custom-keybindings"))
+    keybind_paths.add(f"/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/{name}/")
+    gset("as", media_keys_path, "custom-keybindings", list(keybind_paths))
+    
+def del_keybind(name):
+    keybind_settings_path = f"org.gnome.settings-daemon.plugins.media-keys.custom-keybinding:/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/{name}/"
+    greset(keybind_settings_path)
+
+    media_keys_path = "org.gnome.settings-daemon.plugins.media-keys"
+    keybind_paths = set(gget("as", media_keys_path, "custom-keybindings"))
+    keybind_paths.discard(f"/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/{name}/")
+    gset("as", media_keys_path, "custom-keybindings", list(keybind_paths))
+
+def list_keybinds():
+    media_keys = GSettings.new("org.gnome.settings-daemon.plugins.media-keys")
+    keybind_paths = set(media_keys.get_value("custom-keybindings").unpack())
+    for keybind in keybind_paths:
+        regex = re.compile(r"^/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/(?P<name>[^/]*)/$")
+        name = regex.fullmatch(keybind).group("name")
+        keybind_settings = GSettings.new_with_path("org.gnome.settings-daemon.plugins.media-keys.custom-keybinding", keybind)
+        display_name = keybind_settings.get_value("name").unpack()
+        shortcut = keybind_settings.get_value("binding").unpack()
+        command = keybind_settings.get_value("command").unpack()
+        yield name, display_name, shortcut, command
+
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(prog="gkeybind")
+    sub_parsers = parser.add_subparsers(title="subcommands", dest="subcommand")
+
+    list_parser = sub_parsers.add_parser("list", help="list all keybinds")
+
+    add_parser = sub_parsers.add_parser("add", help="Add a new keybind")
+    add_parser.add_argument("name", help="name to use when storing keybind")
+    add_parser.add_argument("display_name", help="name to show in Settings")
+    add_parser.add_argument("keybind", help="keys to trigger keybind, eg. <Super>Return")
+    add_parser.add_argument("command", help="command to execute when keybind gets triggered")
+
+    del_parser = sub_parsers.add_parser("del", help="delete a keybind")
+    del_parser.add_argument("name")
+
+    args = parser.parse_args()
+
+    if args.subcommand == "add":
+        add_keybind(args.name, args.display_name, args.keybind, args.command)
+    elif args.subcommand == "del":
+        del_keybind(args.name)
+    elif args.subcommand == "list":
+        for i, (name, display_name, shortcut, command) in enumerate(list_keybinds()):
+            if i:
+                print()
+            print(f"[{name}]")
+            print(f"name={display_name}")
+            print(f"binding={shortcut}")
+            print(f"command={command}")
+    else:
+        parser.print_help()
+
