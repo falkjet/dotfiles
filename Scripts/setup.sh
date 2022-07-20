@@ -49,6 +49,24 @@ case "$os" in
             log_stage Installing Packages
             sudo dnf install ${packages[@]}
         fi;;
+    arch)
+        packages=(
+            git
+            git-delta
+            starship
+            bat
+            fzf
+            neovim
+            unzip
+        )
+        if [ "$XDG_CURRENT_DESKTOP" = GNOME ]; then
+            packages+=(gnome-tweaks papirus-icon-theme)
+        fi
+        packages=($(comm -23 <(for package in "${packages[@]}"; do echo "$package"; done | sort -u) <(pacman -Qq | sort)))
+        if [ ${#packages[@]} != 0 ]; then
+            log_stage Installing Packages
+            sudo pacman -S ${packages[@]}
+        fi;;
     *)
         echo This distro is not supported
         exit 1;;
