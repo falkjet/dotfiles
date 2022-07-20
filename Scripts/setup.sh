@@ -132,7 +132,8 @@ fi
 ###############
 ## Oh my zsh ##
 ###############
-if [[ ! -e $ZSH ]]; then
+if command -v zsh > /dev/null && [[ ! -e $ZSH ]]; then
+    log_stage Installing Oh my zsh
     export KEEP_ZSHRC=yes
     export RUNZSH=no
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
