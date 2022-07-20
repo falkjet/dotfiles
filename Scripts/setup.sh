@@ -15,8 +15,9 @@ then
     git --git-dir="$HOME/dotfiles" --work-tree="$HOME" config status.showUntrackedFiles no
     git --git-dir="$HOME/dotfiles" --work-tree="$HOME" sparse-checkout set '/*' '!*.md'
     git --git-dir="$HOME/dotfiles" --work-tree="$HOME" checkout -f
-    source .profile
     exec bash Scripts/setup.sh
+else
+    source .profile
 fi
 
 ##########################
