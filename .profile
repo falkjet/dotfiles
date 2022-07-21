@@ -81,3 +81,8 @@ export ZSH="$HOME/.local/share/oh-my-zsh"
 ### Man ###
 export MANROFFOPT="-c"
 export MANPAGER="sh -c 'col -bx | bat -plman'"
+
+### Snap ###
+if [ -e "/snap/bin" ]; then
+    export PATH="$PATH:/snap/bin"
+fi
