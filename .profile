@@ -77,3 +77,7 @@ export IPYTHONDIR="~/.config/ipython"
 
 ### Zsh ###
 export ZSH="$HOME/.local/share/oh-my-zsh"
+
+### Man ###
+export MANROFFOPT="-c"
+export MANPAGER="sh -c 'col -bx | bat -plman'"

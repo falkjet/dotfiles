@@ -15,8 +15,9 @@ then
     git --git-dir="$HOME/dotfiles" --work-tree="$HOME" config status.showUntrackedFiles no
     git --git-dir="$HOME/dotfiles" --work-tree="$HOME" sparse-checkout set '/*' '!*.md'
     git --git-dir="$HOME/dotfiles" --work-tree="$HOME" checkout -f
-    source .profile
     exec bash Scripts/setup.sh
+else
+    source .profile
 fi
 
 ##########################
@@ -47,6 +48,24 @@ case "$os" in
         if [ ${#packages[@]} != 0 ]; then
             log_stage Installing Packages
             sudo dnf install ${packages[@]}
+        fi;;
+    arch)
+        packages=(
+            git
+            git-delta
+            starship
+            bat
+            fzf
+            neovim
+            unzip
+        )
+        if [ "$XDG_CURRENT_DESKTOP" = GNOME ]; then
+            packages+=(gnome-tweaks papirus-icon-theme)
+        fi
+        packages=($(comm -23 <(for package in "${packages[@]}"; do echo "$package"; done | sort -u) <(pacman -Qq | sort)))
+        if [ ${#packages[@]} != 0 ]; then
+            log_stage Installing Packages
+            sudo pacman -S ${packages[@]}
         fi;;
     *)
         echo This distro is not supported
@@ -131,7 +150,8 @@ fi
 ###############
 ## Oh my zsh ##
 ###############
-if [[ ! -e $ZSH ]]; then
+if command -v zsh > /dev/null && [[ ! -e $ZSH ]]; then
+    log_stage Installing Oh my zsh
     export KEEP_ZSHRC=yes
     export RUNZSH=no
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
